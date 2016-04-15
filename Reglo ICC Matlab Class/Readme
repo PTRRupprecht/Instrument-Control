@@ -1,0 +1,1 @@
+The Reglo ICC Matlab Class is a Matlab adapter to control a 4-wheel digitally controlled peristaltic pump (http://www.ismatec.com/int_e/pumps/t_reglo/reglo.htm). The company provides a control software and a Labview control VI, but no Matlab control interface. I used the serial commands provided by the pump manual to write this adapter.

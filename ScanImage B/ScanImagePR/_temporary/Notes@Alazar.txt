@@ -1,0 +1,67 @@
+AlazarSetCaptureClock
+	- Internal Clock
+	- External Clock (Fast, Slow; Clock Edge Rising)
+	- decimation factor is used :-(
+
+AlazarSetExternalClockLevel
+	- fine-tuning external clock
+
+Dummy clock if no clock is supplied
+	- AlazarSetClockSwitchOver
+
+
+Every channel (A,B,C,D) also has an amplifier!
+
+AlazarInputControl
+	- Input range, impedance, DC coupling (means: no high pass condensator filter)
+AlazarSetBWLimit
+	- Limits bandwidth (=lowpassfilter)
+
+
+
+AlazarSetTriggerOperation : two trigger engines are available (engine K and engine J), see 2.3.3.3 for revelant example
+	- trigger ~= clock
+	- specify trigger engine (Trigger engine J = 0), data source (Trig Chan A = 0), trigger slope (trigger slope positive = 1), trigger level (128 = 0%), trigger operation (...)
+
+
+AlazarSetTriggerDelay
+	- wait some time after the trigger input before acquisition
+
+
+AlazarSetTriggerOperationForScanning (2.3.3.6)
+	- use AlazarSetTriggerOperationForScanning to replace AlazarSetTriggerOperation if external clock and external trigger
+
+
+Alazar 9440: AUX I/O 1 is configured by firmware as a trigger output signal, while AUX I/O 2 is configured by software using AlazarConfigureAuxIO.
+	- AlazarConfigureAuxIO can wait for a certain number of records (what is a record?)
+
+
+Dual Port AutoDMA: in contrast to single port, dual port transfers simultaneaously to the onboard buffer and from the buffer to the application memory
+	- there are four modes: Traditional, NPT (NoPreTrigger), Triggered Streaming, Continuous Streaming
+	- Traditional only for low trigger repeat rates, but with a record header
+	- NPT: Acquire multiple records – one per trigger event. Each record may contain only samples after its trigger event. Each buffer contains one or more records. Support high trigger repeat rates.
+	- triggered Streaming: gapless stream spanning multiple buffers, one single record
+	- continuous streaming is without triggering
+
+	- what has to be done in AutoDMA:
+		. Specify the AutoDMA mode, samples per record, records per buffer, and records per acquisition.
+		. Arm the board to start the acquisition.
+		. Wait for an AutoDMA buffer to be filled, process the buffer, and repeat until the acquisition is complete.
+
+
+Two functions to make AutoDMA acquisitons: Asynchronous AutoDMA is the preferred one, because lower CPU usage.
+	- use AlazarPostAsyncBuffer, AlazarWaitAsyncBufferComplete (for Matlab/C++, but unclear if this is good for transfer of the buffer to the Matlab Workspace; alternative: ADMA_ALLOC_BUFERS)
+	- call AlazarAbortAsyncRead in the end to get underfilled buffers into application memory
+	- use 3+ boards, accounting for non-real time OS; it is possible to manage application buffers separately from board buffers
+
+
+Scanning applications (2.4.2.8)
+
+
+
+
+
+
+
+
+

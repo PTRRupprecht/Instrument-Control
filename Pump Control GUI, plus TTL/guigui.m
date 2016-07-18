@@ -22,7 +22,7 @@ function varargout = guigui(varargin)
 
 % Edit the above text to modify the response to help guigui
 
-% Last Modified by GUIDE v2.5 14-Apr-2016 13:49:56
+% Last Modified by GUIDE v2.5 18-Jul-2016 17:37:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,11 +73,13 @@ handles.TTLtrigger = Task();
 handles.TTLtrigger.createDOChan('Dev3','port0/line0');
 handles.TTLtrigger.writeDigitalData(0);
 handles.repeats = 1;
+handles.waitingTime = 0;
 
 set(handles.edit1,'string','5');
 set(handles.edit2,'string','1');
 set(handles.edit3,'string','0');
 set(handles.edit4,'string','1');
+set(handles.edit5,'string','0');
 
 axes(handles.axes1);
 co = [0    1    1
@@ -228,32 +230,35 @@ function pushbutton6_Callback(hObject, eventdata, handles)
     % start timed loop with
     % a) TTL trigger
     % b) pump control with varying pump speed
-    for k = 1:handles.repeats
-        
-        setappdata(get(hObject,'Parent'),'stop',0);
-    
-        handles.stop = 0;
-        tic
-        handles.TTLtrigger.writeDigitalData(1);
-        TTL_level = 1;
-        while toc < size(handles.waveform4,1)/handles.cmdrate && getappdata(get(hObject,'Parent'),'stop') == 0
-            xx = toc;
+    handles.TTLtrigger.writeDigitalData(0);
+    pause(0.05);
+    setappdata(get(hObject,'Parent'),'stop',0);
 
-            time_index = max(1,round(xx*handles.cmdrate));
-            for i = 1:4
-                rpm = handles.waveform4(time_index,i)/0.063;
-                handles.pump1.setSpeed(i,rpm);
-                handles.pump1.startChannel(i);
-            end
+    handles.stop = 0;
+    tic
+    handles.TTLtrigger.writeDigitalData(1);
+    TTL_level = 1;
+    while toc < size(handles.waveform4,1)/handles.cmdrate && getappdata(get(hObject,'Parent'),'stop') == 0
+        xx = toc;
 
-            set(handles.edit3,'string',sprintf('%2.1f',round(10*xx)/10));
-            if xx > 1 && TTL_level == 1
-                handles.TTLtrigger.writeDigitalData(0);
-                TTL_level = 0;
-            end
-            pause(0.01); % 
+        time_index = max(1,round(xx*handles.cmdrate));
+        for i = 1:4
+            rpm = handles.waveform4(time_index,i)/0.063;
+            handles.pump1.setSpeed(i,rpm);
+            handles.pump1.startChannel(i);
         end
+        set(handles.edit3,'string',sprintf('%2.1f',round(10*xx)/10));
+        if xx > 1 && TTL_level == 1
+            handles.TTLtrigger.writeDigitalData(0);
+            TTL_level = 0;
+        end
+        pause(0.01); % 
     end
+    setappdata(get(hObject,'Parent'),'stop',1);
+    handles.pump1.setSpeed(1,handles.flowscaling/0.063);
+    for i = 2:4; handles.pump1.setSpeed(i,0); end
+    handles.pump1.startChannel(1);
+    guidata(hObject, handles);
 
 function edit2_Callback(hObject, eventdata, handles)
 temp = get(hObject,'String');
@@ -296,15 +301,30 @@ hardCodedPaths(5,handles,hObject);
 function pushbutton12_Callback(hObject, eventdata, handles)
 hardCodedPaths(6,handles,hObject);
 
-function hardCodedPaths(number,handles,hObject)
-ATablw = {'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_91.mat',
-    'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_92.mat',
-    'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_93.mat',
-    'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_94.mat',
-    'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_95.mat',
-    'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_96.mat'};
+function wf4 = hardCodedPaths(number,handles,hObject)
+% ATablw = {'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_91.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_92.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_93.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_94.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_95.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\paradigm_96.mat'};
+% ATablw = {'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\tuning02.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\tuning03.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\tuning04.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\morphing_log_2to3.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\morphing_log_3to2.mat',
+%     'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsMay2016\tuning_3steps.mat'};
+
+ATablw = {'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane2short.mat',
+'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane3short.mat',
+'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane4short.mat',
+'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane2long.mat',
+'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane3long.mat',
+'C:\OldSystem\RegloICC_PumpControl\pump control waveform\WaveformsJune2016\OdorLane4long.mat'};
+
 load(ATablw{number});
 handles.waveform4 = waveform4*handles.flowscaling;
+wf4 = waveform4*handles.flowscaling;
 axes(handles.axes1) ;
 co = [0    1    1
     0.9290    0.6940    0.1250
@@ -317,7 +337,6 @@ set(gcf,'defaultAxesColorOrder',co);
 plot((1:size(handles.waveform4,1))/handles.cmdrate,handles.waveform4(:,2:4));
 xlabel('time [sec]');
 ylabel('total flow rate [mL/min]');
-
 guidata(hObject, handles);
 
 
@@ -363,7 +382,12 @@ guidata(hObject, handles);
 
 function edit4_Callback(hObject, eventdata, handles)
 temp = get(hObject,'String');
-handles.repeats = max(1,round(str2double(temp)));
+temp2 = textscan(temp,'%s');
+clear tempX
+for kk = 1:numel(temp2{1})
+    tempX(kk) = min(max(str2double(temp2{1}{kk}),1),6);
+end
+handles.repeats = tempX;
 set(handles.edit4,'string',num2str(handles.repeats));
 guidata(hObject, handles);
 
@@ -371,6 +395,71 @@ guidata(hObject, handles);
 % --- Executes during object creation, after setting all properties.
 function edit4_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to edit4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton16.
+function pushbutton16_Callback(hObject, eventdata, handles)
+    % start timed loop with
+    % a) TTL trigger
+    % b) pump control with varying pump speed
+    for k = 1:numel(handles.repeats)
+        if k > 1
+            pause(handles.waitingTime);
+        end
+        wf4 = hardCodedPaths(handles.repeats(k),handles,hObject);
+        handles.TTLtrigger.writeDigitalData(0);
+        pause(0.05);
+        setappdata(get(hObject,'Parent'),'stop',0);
+    
+        handles.stop = 0;
+        tic
+        handles.TTLtrigger.writeDigitalData(1);
+        TTL_level = 1;
+        while toc < size(wf4,1)/handles.cmdrate && getappdata(get(hObject,'Parent'),'stop') == 0
+            xx = toc;
+
+            time_index = max(1,round(xx*handles.cmdrate));
+            for i = 1:4
+                rpm = wf4(time_index,i)/0.063;
+                handles.pump1.setSpeed(i,rpm);
+                handles.pump1.startChannel(i);
+            end
+            set(handles.edit3,'string',sprintf('%2.1f',round(10*xx)/10));
+            if xx > 1 && TTL_level == 1
+                handles.TTLtrigger.writeDigitalData(0);
+                TTL_level = 0;
+            end
+            pause(0.01); % 
+        end
+        if xx + 0.5 < size(wf4,1)/handles.cmdrate
+            break;
+        end
+    end
+    setappdata(get(hObject,'Parent'),'stop',1);
+    handles.pump1.setSpeed(1,handles.flowscaling/0.063);
+    for i = 2:4; handles.pump1.setSpeed(i,0); end
+    handles.pump1.startChannel(1);
+    guidata(hObject, handles);
+
+
+
+function edit5_Callback(hObject, eventdata, handles)
+temp = get(hObject,'String');
+handles.waitingTime = str2double(temp);
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function edit5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

@@ -3,7 +3,7 @@ Instrument Control for Microscopes and Accessories
 
 ## Scanimage B: Control software of a two-photon resonant scanning microscope
 
-ScanImageB is a software developed by myself for the control of a two-photon resonant scanning microscope. The adapters for stage controller and pockels cell as well as the look and feel of the GUI are taken from Scanimage 4.2, a freely accessible software developed in the group of Karel Svoboda in Janelia and continued semi-commercially by http://vidriotechnologies.com/.
+ScanImageB is a software developed by myself for the control of a two-photon resonant scanning microscope. The adapters for stage controller and pockels cell as well as the look and feel of the GUI are taken from Scanimage 4.2, a freely accessible software developed in the group of Karel Svoboda in Janelia and continued [semi-commercially](http://vidriotechnologies.com/).
 
 <img src ="https://github.com/PTRRupprecht/Instrument-Control/blob/master/gui.png" />
 

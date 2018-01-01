@@ -3,9 +3,9 @@ Instrument Control for Microscopes and Accessories
 
 ## Scanimage B: Control software of a two-photon resonant scanning microscope
 
-<img src ="https://github.com/PTRRupprecht/Instrument-Control/blob/master/gui.png" />
-
 ScanImageB is a software developed by myself for the control of a two-photon resonant scanning microscope. The adapters for stage controller and pockels cell as well as the look and feel of the GUI are taken from Scanimage 4.2, a freely accessible software developed in the group of Karel Svoboda in Janelia and continued semi-commercially by http://vidriotechnologies.com/.
+
+<img src ="https://github.com/PTRRupprecht/Instrument-Control/blob/master/gui.png" />
 
 Under the hood, I changed the main processing lines, mostly inspired by scanbox.wordpress.com (Dario Ringach). I'm using a Alazar 9440 DAQ board for laser-pulse timed acquisition at 80 MHz and NI 6321 DAQ boards for synchronization and instrument control.
 The reason for uploading this software is 1) version control for [the lab I'm working in](http://www.fmi.ch/research/groupleader/?group=119) and 2) offering the possibility to point other researchers/programmers to interesting parts of the code. The software as a whole is NOT supposed to be self-explanatory, and it is not intended to be. (There is no comparably complex microscope control software that is self-explanatory, and all of them require costumer support by one or more persons, which I cannot provide.)

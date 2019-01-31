@@ -10,7 +10,7 @@ ScanImageB is a software developed by myself for the control of a two-photon res
 Under the hood, I changed the main processing lines, mostly inspired by scanbox.wordpress.com (Dario Ringach). I'm using a Alazar 9440 DAQ board for laser-pulse timed acquisition at 80 MHz and NI 6321 DAQ boards for synchronization and instrument control.
 The reason for uploading this software is 1) version control for [the lab I'm working in](http://www.fmi.ch/research/groupleader/?group=119) and 2) offering the possibility to point other researchers/programmers to interesting parts of the code. The software as a whole is NOT supposed to be self-explanatory, and it is not intended to be. (There is no comparably complex microscope control software that is self-explanatory, and all of them require costumer support by one or more persons, which I cannot provide.)
 
-This software has been used for two-photon calcium imaging for example in the following papers: [paper 1]( http://dx.doi.org/10.1016/j.cub.2017.11.007), [paper 2](https://www.osapublishing.org/boe/abstract.cfm?uri=boe-7-5-1656).
+This software has been used for two-photon calcium imaging for example in the following papers: [paper 1]( http://dx.doi.org/10.1016/j.cub.2017.11.007), [paper 2](https://www.osapublishing.org/boe/abstract.cfm?uri=boe-7-5-1656), [paper 3](https://doi.org/10.1016/j.neuron.2018.09.013).
 
 Some interesting lines of code are pointed out in [this blog post](https://ptrrupprecht.wordpress.com/2016/12/01/matlab-code-for-instrument-control-of-a-resonant-scanning-microscope/).
 
